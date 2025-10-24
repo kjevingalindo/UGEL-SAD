@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class DocenteController extends Controller
 {
     /**
-     * Mostrar todos los docentes con su institución y categoría (solo campos necesarios).
+     * Mostrar todos los docentes con su institución y categoría.
      */
     public function index()
     {
@@ -21,7 +21,7 @@ class DocenteController extends Controller
             'nombre',
             'apellido',
             'telefono',
-            'correo',
+            'email',
             'institucion_id',
             'categoria_id',
         ]);
@@ -42,7 +42,7 @@ class DocenteController extends Controller
             'nombre' => 'required|string|max:255',
             'apellido' => 'required|string|max:255',
             'telefono' => 'nullable|string|max:15',
-            'correo' => 'nullable|email|max:255',
+            'email' => 'nullable|email|max:255',
             'institucion_id' => 'required|exists:instituciones,id',
             'categoria_id' => 'required|exists:categorias,id',
         ]);
@@ -92,7 +92,7 @@ class DocenteController extends Controller
             'nombre' => 'sometimes|string|max:255',
             'apellido' => 'sometimes|string|max:255',
             'telefono' => 'nullable|string|max:15',
-            'correo' => 'nullable|email|max:255',
+            'email' => 'nullable|email|max:255',
             'institucion_id' => 'sometimes|exists:instituciones,id',
             'categoria_id' => 'sometimes|exists:categorias,id',
         ]);

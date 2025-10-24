@@ -8,22 +8,26 @@ use Illuminate\Http\Request;
 class CategoriaController extends Controller
 {
     /**
-     * 📋 Listar todas las categorías
+     * Listar todas las categorías.
      */
     public function index()
     {
         $categorias = Categoria::select('id', 'nombre')->get();
 
-        return response()->json($categorias, 200);
+        return response()->json([
+            'message' => 'Lista de categorías obtenida correctamente',
+            'data' => $categorias
+        ], 200);
     }
 
     /**
-     * ➕ Registrar una nueva categoría
+     * Registrar una nueva categoría.
      */
     public function store(Request $request)
     {
         $request->validate([
             'nombre' => 'required|string|max:255|unique:categorias,nombre',
+            'descripcion' => 'nullable|string|max:500',
         ]);
 
         $categoria = Categoria::create($request->all());
@@ -35,22 +39,24 @@ class CategoriaController extends Controller
     }
 
     /**
-     * 🔍 Mostrar una categoría específica
+     * Mostrar una categoría específica.
      */
     public function show($id)
     {
-        $categoria = Categoria::with('docentes:id,nombre,apellido,categoria_id')
-            ->find($id);
+        $categoria = Categoria::with('docentes:id,nombre,apellido,categoria_id')->find($id);
 
         if (!$categoria) {
             return response()->json(['message' => 'Categoría no encontrada'], 404);
         }
 
-        return response()->json($categoria, 200);
+        return response()->json([
+            'message' => 'Categoría encontrada',
+            'data' => $categoria
+        ], 200);
     }
 
     /**
-     * ✏️ Actualizar una categoría
+     * Actualizar una categoría.
      */
     public function update(Request $request, $id)
     {
@@ -62,6 +68,7 @@ class CategoriaController extends Controller
 
         $request->validate([
             'nombre' => 'required|string|max:255|unique:categorias,nombre,' . $id,
+            'descripcion' => 'nullable|string|max:500',
         ]);
 
         $categoria->update($request->all());
@@ -73,7 +80,7 @@ class CategoriaController extends Controller
     }
 
     /**
-     * ❌ Eliminar una categoría
+     * Eliminar una categoría.
      */
     public function destroy($id)
     {
