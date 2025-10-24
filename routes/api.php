@@ -3,30 +3,40 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-
-//Importacion de controladores
+// Importación de controladores
 use App\Http\Controllers\InstitucionController;
 use App\Http\Controllers\CategoriaController;
-use App\Http\Controllers\DocenteController; 
-
+use App\Http\Controllers\DocenteController;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
 | API Routes
 |--------------------------------------------------------------------------
 |
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
+| Aquí se registran todas las rutas del sistema SAD-UGEL.
+| Estas rutas son cargadas por el RouteServiceProvider dentro del grupo "api".
 |
 */
 
+// ✅ Rutas públicas de autenticación
+Route::post('register', [AuthController::class, 'register']);
+Route::post('login', [AuthController::class, 'login']);
+
+// ✅ Rutas protegidas con autenticación Sanctum
+Route::middleware('auth:sanctum')->group(function () {
+
+    // Información del usuario autenticado
+    Route::get('me', [AuthController::class, 'me']);
+    Route::post('logout', [AuthController::class, 'logout']);
+
+    // 🔒 Rutas principales del sistema SAD-UGEL (solo con login)
+    Route::apiResource('instituciones', InstitucionController::class);
+    Route::apiResource('categorias', CategoriaController::class);
+    Route::apiResource('docentes', DocenteController::class);
+});
+
+// Ruta de prueba del usuario autenticado
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-
-
-// Rutas principales del sistema SAD-UGEL
-Route::apiResource('instituciones', InstitucionController::class);
-Route::apiResource('categorias', CategoriaController::class);
-Route::apiResource('docentes', DocenteController::class);
