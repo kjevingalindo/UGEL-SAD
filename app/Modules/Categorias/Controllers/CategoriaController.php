@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Modules\Categorias\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Models\Categoria;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
 
 class CategoriaController extends Controller
 {

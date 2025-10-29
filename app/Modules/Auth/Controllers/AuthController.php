@@ -1,16 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Modules\Auth\Controllers;
 
-use App\Models\User;
+use App\Http\Controllers\Controller; // 👈 IMPORTANTE: hereda del controlador base
 use Illuminate\Http\Request;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
     /**
-     * Registrar un nuevo usuario
+     * Registro de usuario
      */
     public function register(Request $request)
     {
@@ -29,14 +30,14 @@ class AuthController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
-            'message' => 'Usuario registrado correctamente',
+            'message' => 'Usuario registrado exitosamente',
             'user' => $user,
             'token' => $token,
         ], 201);
     }
 
     /**
-     * Iniciar sesión
+     * Inicio de sesión
      */
     public function login(Request $request)
     {
@@ -49,11 +50,11 @@ class AuthController extends Controller
 
         if (!$user || !Hash::check($validated['password'], $user->password)) {
             throw ValidationException::withMessages([
-                'email' => ['Las credenciales no son válidas.'],
+                'email' => ['Credenciales incorrectas.'],
             ]);
         }
 
-        // Eliminar tokens antiguos
+        // Elimina tokens anteriores
         $user->tokens()->delete();
 
         $token = $user->createToken('auth_token')->plainTextToken;
@@ -62,7 +63,17 @@ class AuthController extends Controller
             'message' => 'Inicio de sesión exitoso',
             'user' => $user,
             'token' => $token,
-        ], 200);
+        ]);
+    }
+
+    /**
+     * Obtener usuario autenticado
+     */
+    public function me(Request $request)
+    {
+        return response()->json([
+            'user' => $request->user()
+        ]);
     }
 
     /**
@@ -72,16 +83,6 @@ class AuthController extends Controller
     {
         $request->user()->currentAccessToken()->delete();
 
-        return response()->json([
-            'message' => 'Sesión cerrada correctamente'
-        ], 200);
-    }
-
-    /**
-     * Obtener información del usuario autenticado
-     */
-    public function me(Request $request)
-    {
-        return response()->json($request->user());
+        return response()->json(['message' => 'Sesión cerrada correctamente']);
     }
 }

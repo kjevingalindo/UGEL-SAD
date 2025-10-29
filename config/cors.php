@@ -7,19 +7,27 @@ return [
     | Cross-Origin Resource Sharing (CORS) Configuration
     |--------------------------------------------------------------------------
     |
-    | Here you may configure your settings for cross-origin resource sharing
-    | or "CORS". This determines what cross-origin operations may execute
-    | in web browsers. You are free to adjust these settings as needed.
-    |
-    | To learn more: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
+    | Esta configuración permite que el frontend (Next.js o React)
+    | se comunique con el backend Laravel usando cookies (Sanctum).
     |
     */
 
-    'paths' => ['api/*', 'sanctum/csrf-cookie', 'login', 'logout'],
+    'paths' => [
+        'api/*',
+        'login',
+        'logout',
+        'register',
+        'sanctum/csrf-cookie',
+        'user', // 👈 por si usas /user o /api/me
+        'me'
+    ],
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://localhost:3000'], // URL de tu frontend
+    'allowed_origins' => [
+        'http://localhost:3000',  
+        'http://127.0.0.1:3000',  
+    ],
 
     'allowed_origins_patterns' => [],
 
@@ -29,6 +37,5 @@ return [
 
     'max_age' => 0,
 
-    'supports_credentials' => true,
-
+    'supports_credentials' => true, // ✅ necesario para compartir cookies
 ];
