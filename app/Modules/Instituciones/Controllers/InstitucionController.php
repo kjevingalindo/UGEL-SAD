@@ -3,7 +3,7 @@
 namespace App\Modules\Instituciones\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Institucion;
+use App\Modules\Instituciones\Models\Institucion;
 use Illuminate\Http\Request;
 
 

@@ -3,7 +3,7 @@
 namespace App\Modules\Docentes\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Docente;
+use App\Modules\Docentes\Models\Docente;
 use Illuminate\Http\Request;
 
 class DocenteController extends Controller
@@ -13,14 +13,11 @@ class DocenteController extends Controller
      */
     public function index()
     {
-        $docentes = Docente::with([
-            'institucion:id,nombre',
-            'categoria:id,nombre'
-        ])->get([
+        $docentes = Docente::with(['institucion:id,nombre'])->get([
             'id',
             'dni',
-            'nombre',
-            'apellido',
+            'nombres',
+            'apellidos',
             'telefono',
             'email',
             'institucion_id',
@@ -40,8 +37,8 @@ class DocenteController extends Controller
     {
         $validated = $request->validate([
             'dni' => 'required|string|max:8|unique:docentes',
-            'nombre' => 'required|string|max:255',
-            'apellido' => 'required|string|max:255',
+            'nombres' => 'required|string|max:255',
+            'apellidos' => 'required|string|max:255',
             'telefono' => 'nullable|string|max:15',
             'email' => 'nullable|email|max:255',
             'institucion_id' => 'required|exists:instituciones,id',

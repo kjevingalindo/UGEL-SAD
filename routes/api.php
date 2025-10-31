@@ -2,34 +2,37 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Modules\Auth\Controllers\AuthController;
-use App\Modules\Instituciones\Controllers\InstitucionController;
-use App\Modules\Categorias\Controllers\CategoriaController;
 use App\Modules\Docentes\Controllers\DocenteController;
+use App\Modules\Docentes\Controllers\DocenteValidacionController;
 
-// 🔓 Rutas públicas (sin autenticación)
-Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
 
-// 🔒 Rutas protegidas (requieren autenticación Sanctum)
 Route::middleware('auth:sanctum')->group(function () {
-
-    // Información del usuario autenticado
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
-    // 🧑‍💼 Solo ADMINISTRADOR (role_id = 1)
-    Route::middleware('role:1')->group(function () {
-        Route::apiResource('/instituciones', InstitucionController::class);
-        Route::apiResource('/categorias', CategoriaController::class);
+    // 🧩 RUTAS SOLO PARA ADMINISTRADORES
+    Route::middleware('role:admin')->group(function () {
+        // Gestión de docentes
+        Route::get('/docentes', [DocenteController::class, 'index']);
+        Route::get('/docentes/{id}', [DocenteController::class, 'show']);
+        Route::post('/docentes', [DocenteController::class, 'store']);
+        Route::put('/docentes/{id}', [DocenteController::class, 'update']);
+        Route::delete('/docentes/{id}', [DocenteController::class, 'destroy']);
+
+        // 🟢 Validaciones (Pendiente, Validado, Rechazado)
+        Route::get('/validaciones', [DocenteValidacionController::class, 'index']);
+        Route::post('/validaciones', [DocenteValidacionController::class, 'store']);
+        Route::put('/validaciones/{id}', [DocenteValidacionController::class, 'update']);
+        Route::delete('/validaciones/{id}', [DocenteValidacionController::class, 'destroy']);
+
+        // 🟣 Actualizar validación del docente (por UGEL)
+        Route::patch('/docentes/{id}/validacion', [DocenteValidacionController::class, 'actualizarEstado']);
     });
 
-    // 🧑‍🏫 Solo DIRECTOR (role_id = 2)
-    Route::middleware('role:2')->group(function () {
-        Route::apiResource('/docentes', DocenteController::class);
-    });
-
-    // 👨‍🎓 Solo DOCENTE (role_id = 3)
-    Route::middleware('role:3')->get('/perfil', function () {
-        return response()->json(['message' => 'Bienvenido Docente']);
+    // 🧑‍🏫 RUTAS SOLO PARA DOCENTES
+    Route::middleware('role:docente')->group(function () {
+        Route::get('/mis-datos', [DocenteController::class, 'show']);
     });
 });

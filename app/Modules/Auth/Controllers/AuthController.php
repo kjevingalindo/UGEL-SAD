@@ -2,9 +2,9 @@
 
 namespace App\Modules\Auth\Controllers;
 
-use App\Http\Controllers\Controller; // 👈 IMPORTANTE: hereda del controlador base
+use App\Http\Controllers\Controller; 
 use Illuminate\Http\Request;
-use App\Models\User;
+use App\Modules\Auth\User; // ✅ CORREGIDO: usamos el nuevo modelo modular
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 

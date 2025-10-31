@@ -3,9 +3,8 @@
 namespace App\Modules\Categorias\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Categoria;
+use App\Modules\Categorias\Models\Categoria;
 use Illuminate\Http\Request;
-use Illuminate\Database\QueryException;
 
 class CategoriaController extends Controller
 {
@@ -14,7 +13,7 @@ class CategoriaController extends Controller
      */
     public function index()
     {
-        $categorias = Categoria::select('id', 'nombre')->get();
+        $categorias = Categoria::select('id', 'nombre', 'descripcion')->get();
 
         return response()->json([
             'message' => 'Lista de categorías obtenida correctamente',
@@ -32,7 +31,7 @@ class CategoriaController extends Controller
             'descripcion' => 'nullable|string|max:500',
         ]);
 
-        $categoria = Categoria::create($request->all());
+        $categoria = Categoria::create($request->only('nombre', 'descripcion'));
 
         return response()->json([
             'message' => 'Categoría registrada correctamente',
@@ -41,11 +40,11 @@ class CategoriaController extends Controller
     }
 
     /**
-     * Mostrar una categoría específica.
+     * Mostrar una categoría específica con sus docentes.
      */
     public function show($id)
     {
-        $categoria = Categoria::with('docentes:id,nombre,apellido,categoria_id')->find($id);
+        $categoria = Categoria::with('docentes:id,nombres,apellidos,categoria_id')->find($id);
 
         if (!$categoria) {
             return response()->json(['message' => 'Categoría no encontrada'], 404);
@@ -73,7 +72,7 @@ class CategoriaController extends Controller
             'descripcion' => 'nullable|string|max:500',
         ]);
 
-        $categoria->update($request->all());
+        $categoria->update($request->only('nombre', 'descripcion'));
 
         return response()->json([
             'message' => 'Categoría actualizada correctamente',
