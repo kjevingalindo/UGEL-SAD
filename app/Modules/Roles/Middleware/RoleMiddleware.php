@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Roles\Middleware;
+namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
@@ -11,8 +11,13 @@ class RoleMiddleware
     {
         $user = $request->user();
 
-        if (!$user || !$user->role || !in_array($user->role->nombre, $roles)) {
-            return response()->json(['message' => 'Acceso denegado.'], 403);
+        if (!$user || !$user->hasAnyRole($roles)) {
+            \Log::info('Acceso denegado middleware role', [
+                'user_id' => $user?->id,
+                'roles' => $roles,
+                'user_roles' => $user ? $user->getRoleNames() : null,
+            ]);
+            return response()->json(['message' => 'Acceso denegado. No autorizado'], 403);
         }
 
         return $next($request);

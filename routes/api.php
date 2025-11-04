@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 use App\Modules\Auth\Controllers\AuthController;
 use App\Modules\Docentes\Controllers\DocenteController;
 use App\Modules\Docentes\Controllers\DocenteValidacionController;
@@ -16,8 +17,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware('role:admin')->group(function () {
         // Gestión de docentes
         Route::get('/docentes', [DocenteController::class, 'index']);
-        Route::get('/docentes/{id}', [DocenteController::class, 'show']);
         Route::post('/docentes', [DocenteController::class, 'store']);
+        Route::get('/docentes/{id}', [DocenteController::class, 'show']);
         Route::put('/docentes/{id}', [DocenteController::class, 'update']);
         Route::delete('/docentes/{id}', [DocenteController::class, 'destroy']);
 

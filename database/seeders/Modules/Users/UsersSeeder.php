@@ -4,20 +4,51 @@ namespace Database\Seeders\Modules\Users;
 
 use Illuminate\Database\Seeder;
 use App\Modules\Auth\User;
-use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class UsersSeeder extends Seeder
 {
-    public function run(): void
+    public function run()
     {
-        $users = [
-            ['name' => 'Administrador UGEL', 'email' => 'admin@ugel.com', 'password' => Hash::make('admin123'), 'role_id' => 1],
-            ['name' => 'Director', 'email' => 'director@example.com', 'password' => Hash::make('12345678'), 'role_id' => 2],
-            ['name' => 'Docente', 'email' => 'docente@example.com', 'password' => Hash::make('12345678'), 'role_id' => 3],
-        ];
+        // Crear usuarios con sus roles asignados
 
-        foreach ($users as $user) {
-            User::updateOrCreate(['email' => $user['email']], $user);
+        // 1. Administrador UGEL
+        $admin = User::firstOrCreate(
+            ['email' => 'admin@ugel.com'],
+            [
+                'name' => 'Administrador UGEL',
+                'password' => bcrypt('password123'),  // Cambia la contraseña por defecto
+            ]
+        );
+        $adminRole = Role::where('name', 'admin')->first();
+        if ($adminRole && !$admin->hasRole('admin')) {
+            $admin->assignRole($adminRole);
+        }
+
+        // 2. Docente de ejemplo
+        $docente = User::firstOrCreate(
+            ['email' => 'docente@ugel.com'],
+            [
+                'name' => 'Docente de ejemplo',
+                'password' => bcrypt('password123'),
+            ]
+        );
+        $docenteRole = Role::where('name', 'docente')->first();
+        if ($docenteRole && !$docente->hasRole('docente')) {
+            $docente->assignRole($docenteRole);
+        }
+
+        // 3. Director Institución
+        $director = User::firstOrCreate(
+            ['email' => 'director@ugel.com'],
+            [
+                'name' => 'Director Institución',
+                'password' => bcrypt('password123'),
+            ]
+        );
+        $directorRole = Role::where('name', 'director')->first();
+        if ($directorRole && !$director->hasRole('director')) {
+            $director->assignRole($directorRole);
         }
     }
 }

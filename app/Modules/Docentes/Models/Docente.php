@@ -16,6 +16,7 @@ class Docente extends Model
         'nombres',
         'apellidos',
         'telefono',
+        'email',
         'nivel',
         'area',
         'grado_estudio',

@@ -12,6 +12,7 @@ return new class extends Migration {
             $table->string('nombres');
             $table->string('apellidos');
             $table->string('telefono')->nullable();
+            $table->string('email')->unique();
             $table->string('nivel')->nullable();
             $table->string('area')->nullable();
             $table->string('grado_estudio')->nullable();

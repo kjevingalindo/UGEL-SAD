@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model
 {
-    protected $fillable = ['nombre', 'descripcion'];
+    protected $fillable = ['name', 'descripcion'];
+
+    public $timestamps = false; // opcional si no tienes created_at/updated_at
 
     public function users()
     {

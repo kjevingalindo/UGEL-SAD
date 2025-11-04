@@ -12,7 +12,8 @@ class DatabaseSeeder extends Seeder
         $this->call(\Database\Seeders\Modules\Users\UsersSeeder::class);
         $this->call(\Database\Seeders\Modules\Instituciones\InstitucionesSeeder::class);
         $this->call(\Database\Seeders\Modules\Categorias\CategoriasSeeder::class);
-        $this->call(\Database\Seeders\Modules\Docentes\DocentesSeeder::class);
         $this->call(\Database\Seeders\Modules\Docentes\DocenteEstadosSeeder::class);
+        $this->call(\Database\Seeders\Modules\Docentes\DocentesSeeder::class); 
+        //$this->call(\Database\Seeders\Modules\Validaciones\ValidacionEstadosSeeder::class);
     }
 }

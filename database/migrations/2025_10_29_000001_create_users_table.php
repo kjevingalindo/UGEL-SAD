@@ -11,8 +11,13 @@ return new class extends Migration {
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->foreignId('role_id')->nullable()->constrained('roles')->nullOnDelete(); 
-            // Se relaciona con roles y si el rol se elimina, se deja null
+            
+            // ✅ Agregamos la relación con roles
+            $table->foreignId('role_id')
+                  ->nullable()
+                  ->constrained('roles')
+                  ->nullOnDelete();
+            
             $table->timestamps();
         });
     }
@@ -21,4 +26,3 @@ return new class extends Migration {
         Schema::dropIfExists('users');
     }
 };
-
